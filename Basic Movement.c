@@ -6,34 +6,6 @@ void manualDrive() {
 	motor[leftDrive2] = vexRT[Ch3] + vexRT[Ch1];
 }
 
-//LIFT FUNCTIONS
-void liftUp(int speed) {
-	motor[leftLift] = speed;
-	motor[rightLift] = speed;
-}
-
-void liftDown(int speed) {
-	motor[leftLift] = 0 - speed;
-	motor[rightLift] = 0 - speed;
-}
-
-void liftStop() {
-	motor[leftLift] = 0;
-	motor[rightLift] = 0;
-}
-
-void manualLift() {
-	if (vexRT[Btn6U] == 1) {
-		liftUp(100);
-	}
-	else if (vexRT[Btn6D] == 1) {
-		liftDown(100);
-	}
-	else {
-		liftStop();
-	}
-}
-
 //INTAKE FUNCTIONS
 void intakeUp(int speed) {
 	motor[coneRight] = speed;

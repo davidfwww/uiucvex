@@ -1,5 +1,6 @@
 #pragma config(Sensor, in1,    driveGyro,      sensorGyro)
 #pragma config(Sensor, dgtl1,  liftBump,       sensorTouch)
+#pragma config(Sensor, dgtl2,  liftQuad,       sensorQuadEncoder)
 #pragma config(Motor,  port1,           mobileLeft,    tmotorVex393_HBridge, openLoop)
 #pragma config(Motor,  port2,           coneLeft,      tmotorVex393_MC29, openLoop, reversed)
 #pragma config(Motor,  port3,           leftDrive1,    tmotorVex393_MC29, openLoop)
@@ -20,14 +21,23 @@
 
 //Main competition background code...do not modify!
 #include "Vex_Competition_Includes.c"
+
+//Sensor definitions
+#define liftPos SensorValue(liftQuad)
+
+//Included files
 #include "Basic Movement.c"
+#include "Lift Control.c"
 
 void pre_auton() {}
 
-task autonomous() {}
+task autonomous() {
+	startTask(liftControl);
+}
 
 task usercontrol() {
 	while(true) {
+		startTask(liftControl);
 		manualLift();
 		manualIntake();
 		manualMobile();
