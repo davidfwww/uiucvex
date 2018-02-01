@@ -1,4 +1,6 @@
-#pragma config(Sensor, in1,    driveGyro,      sensorGyro)
+#pragma config(UART_Usage, UART1, uartVEXLCD, baudRate19200, IOPins, None, None)
+#pragma config(UART_Usage, UART2, uartNotUsed, baudRate4800, IOPins, None, None)
+#pragma config(Sensor, in1,    driveGyro,      sensorNone)
 #pragma config(Sensor, dgtl1,  liftBump,       sensorTouch)
 #pragma config(Sensor, dgtl2,  liftQuad,       sensorQuadEncoder)
 #pragma config(Motor,  port1,           mobileLeft,    tmotorVex393_HBridge, openLoop)
@@ -28,6 +30,7 @@
 //Included files
 #include "Basic Movement.c"
 #include "Lift Control.c"
+#include "LCDcontrol.h"
 
 void pre_auton() {}
 
@@ -38,6 +41,7 @@ task autonomous() {
 task usercontrol() {
 	while(true) {
 		startTask(liftControl);
+		startTask(LCD);
 		manualLift();
 		manualIntake();
 		manualMobile();
