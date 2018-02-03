@@ -86,8 +86,8 @@ task liftControl(){
 
 			proportion = Kp*error; //calculate proportion
 			derivative = Kd*(error-lastError); //calculate derivative
+			integral += Ki*error;//calculate integral
 			lastError = error; //set "previous error"
-			integral *= Ki;
 
 			liftRaw = proportion+derivative+integral; //calculate motor power values
 			if(liftRaw > maxPower) liftRaw = 127;
