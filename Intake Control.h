@@ -41,7 +41,7 @@ void manualIntake() {
 	if (vexRT[Btn8R] == 1) {
 		rollerOut(120);
 	} else {
-		rollerIn(25);
+		rollerIn(30);
 	}
 }
 
