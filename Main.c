@@ -33,7 +33,7 @@
 #define intakePos nMotorEncoder[coneRight]
 
 //Included files
-#include "Drive Control.c"
+#include "Drive Control.h"
 #include "Mobile Control.c"
 #include "Lift Control.c"
 #include "Intake Control.c"
