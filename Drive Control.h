@@ -6,4 +6,8 @@ void manualDrive() {
 	motor[leftDrive2] = -vexRT[Ch3] + vexRT[Ch1];
 }
 
-//task driveControl() {
+task driveControl() {
+	while(true) {
+		manualDrive();
+	}
+}

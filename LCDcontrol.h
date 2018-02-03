@@ -62,8 +62,10 @@ task LCD()
 				switch(sense)
 				{
 				case 0://lift buttons
-					displayLCDString(1,0,"liftButton: ");
-					displayNextLCDNumber(1,SensorValue[liftBump]);
+					displayLCDString(1,0,"liftButton1: ");
+					displayNextLCDNumber(1,SensorValue[liftBump1]);
+					displayLCDString(1,0,"liftButton2: ");
+					displayNextLCDNumber(1,SensorValue[liftBump2]);
 					break;
 				case 1://gyroscope
 					displayLCDString(1,0,"Gyro: ");

@@ -46,7 +46,7 @@ task liftControl(){
 	const int minPower = -127;
 
 	while(true) {
-		if(SensorValue[liftBump] != 0) liftPos = 0; //recalibrate lift encoder @ down position
+		if(SensorValue[liftBump1] != 0 && SensorValue[liftBump2] !=0) liftPos = 0; //recalibrate lift encoder @ down position
 
 		if(bIfiAutonomousMode == true) liftState = 3;//allow values to be sent from elsewhere in program
 		else if (vexRT[Btn6U] || vexRT[Btn6D]) liftState = 1; //manual controls

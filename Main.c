@@ -42,16 +42,15 @@
 void pre_auton() {}
 
 task autonomous() {
-	startTask(liftControl);
-	startTask(intakeControl);
+
 }
 
 task usercontrol() {
 	while(true) {
 		startTask(liftControl);
 		startTask(intakeControl);
+		startTask(driveControl);
 		startTask(LCD);
 		manualMobile();
-		manualDrive();
 	}
 }
