@@ -50,8 +50,6 @@ task usercontrol() {
 		startTask(liftControl);
 		startTask(intakeControl);
 		startTask(LCD);
-		manualLift();
-		manualIntake();
 		manualMobile();
 		manualDrive();
 	}
