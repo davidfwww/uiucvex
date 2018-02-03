@@ -1,21 +1,19 @@
 int liftTarget;
 
-void lift(int speed) {
-	motor[leftLift] = speed;
-	motor[rightLift] = speed;
+void liftUp(int speed) {
+	motor[lift] = speed;
 }
 
 void liftStop() {
-	motor[leftLift] = 0;
-	motor[rightLift] = 0;
+	motor[lift] = 0;
 }
 
 void manualLift() {
 	if (vexRT[Btn6U] == 1) {
-		lift(100);
+		liftUp(100);
 	}
 	else if (vexRT[Btn6D] == 1) {
-		lift(-100);
+		liftUp(-100);
 	}
 	else {
 		liftStop();
@@ -92,7 +90,7 @@ task liftControl(){
 			liftRaw = proportion+derivative+integral; //calculate motor power values
 			if(liftRaw > maxPower) liftRaw = 127;
 			else if(liftRaw < minPower) liftRaw = -127;
-			lift(liftRaw);//apply motor values
+			liftUp(liftRaw);//apply motor values
 		}//end if(pidRunning) == true
 		else{
 			encoderVal = 0;
