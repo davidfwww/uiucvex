@@ -9,22 +9,16 @@ const int JOYSTICK_THRESHOLD = 15;
 const int MAX_ACCEL = 10;
 
 //sets right joystick threshold
-int rightJoyAdjusted() {
-	if(abs(rightJoyRaw) > JOYSTICK_THRESHOLD) return rightJoyRaw; //set right joystick threshold
-	else return 0;
-}
-
-//sets left joystick threshold
-int leftJoyAdjusted() {
-	if(abs(leftJoyRaw) > JOYSTICK_THRESHOLD) return leftJoyRaw; //set right joystick threshold
+int adjustJoy(int joy) {
+	if(abs(joy) > JOYSTICK_THRESHOLD) return joy; //set right joystick threshold
 	else return 0;
 }
 
 //manual drive function
 void manualDrive() {
 	//set joystick thresholds
-	int rightJoy = rightJoyAdjusted();
-	int leftJoy = leftJoyAdjusted();
+	int rightJoy = adjustJoy(rightJoyRaw);
+	int leftJoy = adjustJoy(leftJoyRaw);
 
 	//calculate target speed
 	int rightDriveSpeed = -leftJoy - rightJoy;
@@ -115,11 +109,11 @@ task driveControl(){
 				break;
 			//auton gyro pid case
 			case 3:
-				error = driveTarget - gyroPos;
+				error = calcError(driveTarget, gyroPos);
 
-				proportion = gyroKp * error;
+				proportion = calcP(gyroKp, error);
 
-				derivative = gyroKd * (error - prevError);
+				derivative = calcD(gyroKd, error, prevError);
 				prevError = error;
 				if (newTarget) derivative = 0;
 

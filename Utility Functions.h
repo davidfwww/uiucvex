@@ -16,11 +16,11 @@ int calcError(int targetPos, int currentPos) {
 }
 
 //calculate proportion for pid
-int pControl(const float Kp, int error) {
+int calcP(const float Kp, int error) {
 	return Kp * error;
 }
 
 //calculate derivative for pid
-int dControl(const float Kd, int error, int prevError) {
+int calcD(const float Kd, int error, int prevError) {
 	return Kd * (error - prevError);
 }
