@@ -31,6 +31,8 @@
 //Sensor definitions
 #define liftPos SensorValue(liftQuad)
 #define intakePos nMotorEncoder[coneRight]
+#define rightJoyRaw vexRT[Ch1]
+#define leftJoyRaw vexRT[Ch3]
 
 //Included files
 #include "Drive Control.h"
