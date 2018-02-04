@@ -52,5 +52,6 @@ void setIntake(int target) {
 task intakeControl(){
 	while(true) {
 		manualIntake();
+		wait1Msec(20);
 	}
 }//end task
