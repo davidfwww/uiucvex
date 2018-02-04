@@ -31,8 +31,11 @@
 //Sensor definitions
 #define liftPos SensorValue(liftQuad)
 #define intakePos nMotorEncoder[coneRight]
+#define driveEncoder nMotorEncoder[leftDrive1]
+#define gyroPos SensorValue(driveGyro)
 #define rightJoyRaw vexRT[Ch1]
 #define leftJoyRaw vexRT[Ch3]
+#define isAuton bIfiAutonomousMode
 
 //Included files
 #include "Drive Control.h"
@@ -41,6 +44,7 @@
 #include "Intake Control.h"
 #include "LCDcontrol.h"
 
+
 void pre_auton() {}
 
 task autonomous() {
@@ -48,11 +52,11 @@ task autonomous() {
 }
 
 task usercontrol() {
+	startTask(liftControl);
+	startTask(intakeControl);
+	startTask(driveControl);
+	startTask(LCD);
 	while(true) {
-		startTask(liftControl);
-		startTask(intakeControl);
-		startTask(driveControl);
-		startTask(LCD);
 		manualMobile();
 	}
 }
