@@ -2,7 +2,7 @@
 
 int driveTarget;
 char* direction;
-bool newTarget = true;
+bool newDriveTarget = true;
 
 //drive constants
 const int JOYSTICK_THRESHOLD = 15;
@@ -41,7 +41,7 @@ void setDrive(char* dir, int target)
 	driveTarget = target;
 	driveEncoder = 0;
 	gyroPos = 0;
-	newTarget = true;
+	newDriveTarget = true;
 }
 
 //positive is forward
@@ -99,13 +99,13 @@ task driveControl(){
 
 				derivative = encoderKd * (error - prevError);
 				prevError = error;
-				if (newTarget) derivative = 0;
+				if (newDriveTarget) derivative = 0;
 
 				raw = proportion + derivative;
 
 				drive(raw);
 
-				newTarget = false;
+				newDriveTarget = false;
 				break;
 			//auton gyro pid case
 			case 3:
@@ -115,13 +115,13 @@ task driveControl(){
 
 				derivative = calcD(gyroKd, error, prevError);
 				prevError = error;
-				if (newTarget) derivative = 0;
+				if (newDriveTarget) derivative = 0;
 
 				raw = proportion + derivative;
 
 				turn(raw);
 
-				newTarget = false;
+				newDriveTarget = false;
 				break;
 			//default case: manual controls
 			default:
