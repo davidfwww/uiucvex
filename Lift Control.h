@@ -41,14 +41,22 @@ task liftControl(){
 	int raw;
 
 	while(true) {
-		if (isAuton) liftState = 1;
+		if (liftReset1 && liftReset2) liftPos = 0;
+
+		if (isAuton && liftTarget == -999) liftState = 1;
+		else if (isAuton) liftState = 2
 		else liftState = 0;
 
 		switch(liftState) {
+			//manual drive case
 			case 0:
 				manualLift();
 				break;
+			//auton no pid case
 			case 1:
+				break;
+			//auton pid case
+			case 2:
 				error = calcError(liftTarget, liftPos);
 
 				proportion = calcP(Kp, error);
@@ -62,6 +70,9 @@ task liftControl(){
 				liftUp(raw);
 
 				newLiftTarget = false;
+				break;
+			default:
+				manualLift();
 				break;
 		}
 	}
