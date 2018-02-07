@@ -38,10 +38,11 @@
 #define isAuton bIfiAutonomousMode
 
 //Included files
+#include "Utility Functions.h"
 #include "Drive Control.h"
-#include "Mobile Control.h"
 #include "Lift Control.h"
 #include "Intake Control.h"
+#include "Mobile Control.h"
 #include "LCDcontrol.h"
 
 
