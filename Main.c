@@ -30,6 +30,8 @@
 
 //Sensor definitions
 #define liftPos SensorValue(liftQuad)
+#define liftReset1 SensorValue(liftBump1)
+#define liftReset2 SensorValue(liftBump2)
 #define intakePos nMotorEncoder[coneRight]
 #define driveEncoder nMotorEncoder[leftDrive1]
 #define gyroPos SensorValue(driveGyro)
@@ -43,13 +45,18 @@
 #include "Lift Control.h"
 #include "Intake Control.h"
 #include "Mobile Control.h"
+#include "Autons.h"
+#include "Auton Execution.h"
 #include "LCDcontrol.h"
-
 
 void pre_auton() {}
 
 task autonomous() {
-
+	startTask(liftControl);
+	startTask(intakeControl);
+	startTask(driveControl);
+	startTask(LCD);
+	autonExecution();
 }
 
 task usercontrol() {

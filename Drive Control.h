@@ -59,6 +59,10 @@ void turn(int speed) {
 	motor[leftDrive2] = speed;
 }
 
+void driveStop() {
+	drive(0);
+}
+
 //drive control task
 task driveControl(){
 	int driveState = 0;

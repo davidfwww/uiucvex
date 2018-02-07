@@ -8,7 +8,7 @@ void liftUp(int speed) {
 }
 
 void liftStop() {
-	motor[lift] = 0;
+	liftUp(0);
 }
 
 void manualLift() {
@@ -44,7 +44,7 @@ task liftControl(){
 		if (liftReset1 && liftReset2) liftPos = 0;
 
 		if (isAuton && liftTarget == -999) liftState = 1;
-		else if (isAuton) liftState = 2
+		else if (isAuton) liftState = 2;
 		else liftState = 0;
 
 		switch(liftState) {
