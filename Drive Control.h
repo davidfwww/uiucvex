@@ -81,7 +81,7 @@ task driveControl(){
 
 	while(true) {
 		if (!isAuton) driveState = 0;
-		else if (direction == "time") driveState = 1;
+		else if (direction == "null") driveState = 1;
 		else if (direction == "forward" || direction == "back") driveState = 2;
 		else if (direction == "right" || direction == "left") driveState = 3;
 
