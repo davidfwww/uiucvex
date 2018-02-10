@@ -20,8 +20,8 @@ void manualDrive() {
 	int leftJoy = adjustJoy(leftJoyRaw);
 
 	//calculate target speed
-	int rightDriveSpeed = -leftJoy - rightJoy;
-	int leftDriveSpeed = -leftJoy + rightJoy;
+	int rightDriveSpeed = leftJoy - rightJoy;
+	int leftDriveSpeed = leftJoy + rightJoy;
 
 	//apply slew
 	rightDriveSpeed = slew(MAX_ACCEL, rightDriveSpeed, motor[rightDrive1]);
