@@ -27,8 +27,8 @@ void auton1() {
 	mobileStop();
 	rollerOut(100);
 	wait1Msec(500);
-	rollerIn(30);
 
+	rollerIn(30);
 	setDrive("forward", 240);
 	intakeDown(100);
 	wait1Msec(250);
@@ -43,11 +43,12 @@ void auton1() {
 	rollerOut(100);
 	wait1Msec(500);
 
+	rollerIn(30);
 	setDrive("forward", 300);
 	intakeDown(100);
 	wait1Msec(250);
-	liftUp(-100);
-	wait1Msec(850);
+	liftUp(-85);
+	wait1Msec(750);
 	liftUp(100);
 	intakeUp(100);
 	wait1Msec(350);
