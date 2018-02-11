@@ -46,7 +46,7 @@ void auton1() {
 	setDrive("forward", 300);
 	intakeDown(100);
 	wait1Msec(250);
-	liftUp(-75);
+	liftUp(-85);
 	wait1Msec(750);
 	liftUp(100);
 	intakeUp(100);

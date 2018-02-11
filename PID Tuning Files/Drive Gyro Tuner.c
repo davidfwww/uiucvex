@@ -1,7 +1,7 @@
 #pragma config(UART_Usage, UART1, uartVEXLCD, baudRate19200, IOPins, None, None)
 #pragma config(UART_Usage, UART2, uartNotUsed, baudRate4800, IOPins, None, None)
 #pragma config(I2C_Usage, I2C1, i2cSensors)
-#pragma config(Sensor, in2,    driveGyro,      sensorGyro)
+#pragma config(Sensor, in1,    driveGyro,      sensorGyro)
 #pragma config(Sensor, dgtl1,  liftBump1,      sensorTouch)
 #pragma config(Sensor, dgtl2,  liftBump2,      sensorTouch)
 #pragma config(Sensor, I2C_1,  ,               sensorQuadEncoderOnI2CPort,    , AutoAssign )
@@ -21,12 +21,14 @@
 
 #define gyroPos SensorValue(driveGyro)
 
+int gyroVal = 0;
+
 void initializeGyro()
 {
 	SensorType[in1] = sensorNone; //clear previous sensor readings
-	wait1Msec(1500);
+	wait1Msec(1000);
 	SensorType[in1] = sensorGyro; //reconfigure port as gyro
-	wait1Msec(1500);
+	wait1Msec(2000);
 }
 
 //calculate error for pid
@@ -35,12 +37,12 @@ int calcError(int targetPos, int currentPos) {
 }
 
 //calculate proportion for pid
-int calcP(const float Kp, int error) {
+int calcP(float Kp, int error) {
 	return Kp * error;
 }
 
 //calculate derivative for pid
-int calcD(const float Kd, int error, int prevError) {
+int calcD(float Kd, int error, int prevError) {
 	return Kd * (error - prevError);
 }
 
@@ -56,8 +58,9 @@ void turn(int speed) {
 }
 
 //pd constants
-float gyroKp = 0.0;
-float gyroKd = 0.0;
+float gyroKp = 1.0;
+float gyroKd = 2.0;
+int maxTurnPower = 90;
 
 int proportion;
 int derivative;
@@ -68,18 +71,25 @@ int raw;
 task main {
 	initializeGyro();
 	while(true) {
-		error = calcError(driveTarget, gyroPos);
+		gyroVal = gyroPos;
+
+		error = driveTarget - gyroPos;
 
 		proportion = calcP(gyroKp, error);
 
-		derivative = calcD(gyroKd, error, prevError);
+		if (proportion > maxTurnPower) proportion = maxTurnPower;
+		else if (proportion < -maxTurnPower) proportion = -maxTurnPower;
+
+		derivative = gyroKd * (error - prevError);
 		prevError = error;
-		if (newDriveTarget) derivative = 0;
+		//if (newDriveTarget) derivative = 0;
 
 		raw = proportion + derivative;
 
 		turn(raw);
 
 		newDriveTarget = false;
+
+		wait1Msec(20);
 	}
 }

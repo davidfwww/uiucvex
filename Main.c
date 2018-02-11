@@ -1,7 +1,7 @@
 #pragma config(UART_Usage, UART1, uartVEXLCD, baudRate19200, IOPins, None, None)
 #pragma config(UART_Usage, UART2, uartNotUsed, baudRate4800, IOPins, None, None)
 #pragma config(I2C_Usage, I2C1, i2cSensors)
-#pragma config(Sensor, in2,    driveGyro,      sensorGyro)
+#pragma config(Sensor, in1,    driveGyro,      sensorGyro)
 #pragma config(Sensor, dgtl1,  liftBump1,      sensorTouch)
 #pragma config(Sensor, dgtl2,  liftBump2,      sensorTouch)
 #pragma config(Sensor, I2C_1,  ,               sensorQuadEncoderOnI2CPort,    , AutoAssign )
@@ -33,7 +33,7 @@
 #define liftReset1 SensorValue[liftBump1]
 #define liftReset2 SensorValue[liftBump2]
 #define intakePos nMotorEncoder[coneRight]
-#define driveEncoder nMotorEncoder[leftDrive1]
+#define driveEncoder nMotorEncoder[rightDrive1]
 #define gyroPos SensorValue(driveGyro)
 #define rightJoyRaw vexRT[Ch1]
 #define leftJoyRaw vexRT[Ch3]
@@ -54,6 +54,7 @@ void pre_auton() {
 }
 
 task autonomous() {
+	initializeGyro();
 	startTask(liftControl);
 	startTask(intakeControl);
 	startTask(driveControl);

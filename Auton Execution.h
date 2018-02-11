@@ -4,7 +4,7 @@ void autonExecution() {
 	driveStop();
 	setLift(-999);
 	liftStop();
-
+	auton1();
 }
 
 void initializeGyro()
