@@ -20,8 +20,8 @@ void manualDrive() {
 	int leftJoy = adjustJoy(leftJoyRaw);
 
 	//calculate target speed
-	int rightDriveSpeed = -leftJoy - rightJoy;
-	int leftDriveSpeed = -leftJoy + rightJoy;
+	int rightDriveSpeed = leftJoy - rightJoy;
+	int leftDriveSpeed = leftJoy + rightJoy;
 
 	//apply slew
 	rightDriveSpeed = slew(MAX_ACCEL, rightDriveSpeed, motor[rightDrive1]);
@@ -41,6 +41,7 @@ void setDrive(char* dir, int target)
 	driveEncoder = 0;
 	gyroPos = 0;
 	newDriveTarget = true;
+	if (direction == "right" || direction == "back") driveTarget *= -1;
 }
 
 //positive is forward
@@ -53,10 +54,10 @@ void drive(int speed) {
 
 //positive is clockwise
 void turn(int speed) {
-	motor[rightDrive1] = -speed;
-	motor[rightDrive2] = -speed;
-	motor[leftDrive1] = speed;
-	motor[leftDrive2] = speed;
+	motor[rightDrive1] = speed;
+	motor[rightDrive2] = speed;
+	motor[leftDrive1] = -speed;
+	motor[leftDrive2] = -speed;
 }
 
 void driveStop() {
@@ -68,10 +69,11 @@ task driveControl(){
 	int driveState = 0;
 
 	//pd constants
-	const float encoderKp = 0.0;
-	const float encoderKd = 0.0;
-	const float gyroKp = 0.0;
-	const float gyroKd = 0.0;
+	const float encoderKp = 1.0;
+	const float encoderKd = 5.0;
+	const float gyroKp = 0.55;
+	const float gyroKd = 1.35;
+	const float maxTurnPower = 90;
 
 	int proportion;
 	int derivative;
@@ -96,7 +98,8 @@ task driveControl(){
 				break;
 			//auton encoder pid case
 			case 2:
-				error = driveTarget - driveEncoder;
+				//drive encoder counts backward
+				error = driveTarget + driveEncoder;
 
 				proportion = encoderKp * error;
 
@@ -112,11 +115,14 @@ task driveControl(){
 				break;
 			//auton gyro pid case
 			case 3:
-				error = calcError(driveTarget, gyroPos);
+				error = driveTarget - gyroPos;
 
-				proportion = calcP(gyroKp, error);
+				proportion = gyroKp * error;
 
-				derivative = calcD(gyroKd, error, prevError);
+				if (proportion > maxTurnPower) proportion = maxTurnPower;
+				else if (proportion < -maxTurnPower) proportion = -maxTurnPower;
+
+				derivative = gyroKd * (error - prevError);
 				prevError = error;
 				if (newDriveTarget) derivative = 0;
 

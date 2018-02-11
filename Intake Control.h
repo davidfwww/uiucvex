@@ -38,7 +38,7 @@ void manualIntake() {
 		intakeStop();
 	}
 
-	if (vexRT[Btn8R] == 1) {
+	if (vexRT[Btn8R]) {
 		rollerOut(120);
 	} else {
 		rollerIn(30);
@@ -51,7 +51,9 @@ void setIntake(int target) {
 
 task intakeControl(){
 	while(true) {
-		manualIntake();
+		if (!isAuton) {
+			manualIntake();
+		}
 		wait1Msec(20);
 	}
 }//end task

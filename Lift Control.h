@@ -41,7 +41,7 @@ task liftControl(){
 	int raw;
 
 	while(true) {
-		if (liftReset1 && liftReset2) liftPos = 0;
+		if (liftReset1 == 1 || liftReset2 == 1) liftPos = 0;
 
 		if (isAuton && liftTarget == -999) liftState = 1;
 		else if (isAuton) liftState = 2;
