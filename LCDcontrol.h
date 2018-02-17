@@ -1,77 +1,73 @@
-void clearScreen();
-//void buttonP();
-int buttonP(bool *e);
+void clearLCD()
+{
+	clearLCDLine(0);
+	clearLCDLine(1);
+}
+
 
 task LCD()
 {
-	byte screen = 0;
-	byte screenMAX = 2;
-	bool enter = false;
-	byte auto = 1;
-	byte select = 1;
-	byte selectMAX = 1;//enter how many autonoumous functions you have here
-	byte sense = 0;
-	byte senseMAX = 3;//enter how many sensors you have
-	int bState = 0;
+	int buttonState = 2;
+	int BigState = 0;//only two options anyway, automous and sensors
+	int auto = 0, autoMax = 3;//change this as you increase your autonomous capacity
+	int sense = 0, senseMax = 5;//change this as you increase your sensor capacity
+	int update = 1;
+
 	while(true)
 	{
-		writeDebugStreamLine("nLCDButtons: %d",nLCDButtons);
-		writeDebugStreamLine("screen: %d",screen);
-		bState = buttonP(&enter);
-
-		//first button is 1, second button is 2, third button is 4
-		while(bState != 2)//push the middle button for screen change
+		while(buttonState!=1)//
 		{
-			clearScreen();
-			switch(screen)
+			if(BigState == 0) //Automous
 			{
-			case 0://Autonomous Selection
-				writeDebugStreamLine("Autonomous");
-				displayLCDString(0,0,"Autonomous");
-				displayLCDNumber(0,13,auto);
-				if(bState==1)
+				if(buttonState == 2)//if button 2 is pressed, increase auto selection
 				{
-					//buttonP(&enter); //enter is button value of 5
-					if(enter){auto=select;}//assigns number to auto if enter is pressed
-					else{select--;}//decremetns select value otherwise
+					auto--;
+					//clearLCD();
+					update = 1;
+					//displayLCDString(0,0,"Auto: "); displayNextLCDNumber(auto);//display number
+					buttonState = 0;
 				}
-				else if(bState==4)
+				else if(buttonState == 4)//if button 4 is pressed, decrease auto selection
 				{
-					//buttonP(&enter);
-					if(enter){auto=select;}//assigns number to auto if enter is pressed
-					else{select++;}//increments select value otherwise
+					auto++;
+					//clearLCD();
+					//displayLCDString(0,0,"Auto: ");displayNextLCDNumber(auto);//display number
+					update = 1;
+					buttonState = 0;
 				}
-				if(select>selectMAX){select=0;}
-				else if(select<1){select=selectMAX;}
-				break;//end of autonomous case
-			case 1://Sensors
-				writeDebugStreamLine("Sensors");
-				displayLCDString(0,0,"Sensors");
-				if(bState==1)
+				if(auto>autoMax)auto=0;//if auto is more than the maxium automous, loop back to 0
+				else if(auto<0)auto=autoMax;//if auto is less than 0, then loop back to autoMax
+				if(update == 1)
 				{
-					//buttonP();
-					if(sense<0){sense=senseMAX;}
-					else{sense--;}
+					clearLCD();
+					displayLCDString(0,0,"Auto: ");displayNextLCDNumber(auto);//display number
+					update = 0;
 				}
-				else if(bState==4)
-				{
-					//buttonP();
-					if(sense>senseMAX){sense = 0;}
-					else{sense++;}
-				}
+			}
+			else if(BigState == 1)//Sensors
+			{
+				if(buttonState == 2){sense++;buttonState = 0;}//if button 2 is pressed, increase sense selection
+				if(sense>senseMax)sense=0;//if greater than the max senosrs, loop back to 0
+				clearLCD();
 				switch(sense)
 				{
-				case 0://lift buttons
-					displayLCDString(1,0,"liftButton1: ");
-					displayNextLCDNumber(1,SensorValue[liftBump1]);
-					displayLCDString(1,0,"liftButton2: ");
-					displayNextLCDNumber(1,SensorValue[liftBump2]);
+				case 0://wheel encoder
+					displayLCDString(0,0,"wheel: ");
+					displayLCDNumber(1,0,nMotorEncoder[rightDrive1]);
+					if(buttonState == 4){nMotorEncoder[rightDrive1] = 0;buttonState=0;}
 					break;
-				case 1://gyroscope
-					displayLCDString(1,0,"Gyro: ");
-					displayNextLCDNumber(SensorValue[driveGyro]);
-					//buttonP(&enter);
-					if(enter)
+				case 1://body lift encoder
+					displayLCDString(0,0,"body lift: ");
+					displayLCDNumber(1,0,nMotorEncoder[lift]);
+					if(buttonState == 4){nMotorEncoder[lift] = 0;buttonState=0;}
+					break;
+				case 2://collector lift encoder
+					displayLCDString(0,0,"collector: ");
+					displayLCDNumber(1,0,nMotorEncoder[coneRight]);
+					if(buttonState == 4){nMotorEncoder[coneRight] = 0;buttonState=0;}
+					break;
+				case 3://gyroscope
+					if(buttonState == 4)//reset gyroscope
 					{
 						clearLCDLine(1);
 						displayLCDString(1,0,"Resetting GYRO");
@@ -84,63 +80,46 @@ task LCD()
 						clearLCDLine(1);
 						displayLCDString(1,0,"Done");
 						delay(1000);
+						buttonState = 0;
 					}
+					displayLCDString(1,0,"Gyro: ");
+					displayNextLCDNumber(SensorValue[driveGyro]);
 					break;
-				case 2://
+				case 4://lift buttons (both)
+					displayLCDCenteredString(0,"liftButton");
+					setLCDPosition(1,0);
+					displayNextLCDNumber(SensorValue[liftBump2],1);//left bumper
+					setLCDPosition(1,15);
+					displayNextLCDNumber(SensorValue[liftBump1],1);//right bumper
 					break;
-
-				default:
-					displayLCDCenteredString(1,"ERROR NO SENSOR");
+				case 5://batteries
+					displayLCDString(1,0,"Battery Av: ");
+					displayNextLCDNumber(nAvgBatteryLevel/1000., 3);
+					displayNextLCDChar('V');
+					break;
+				default://error value
+					displayLCDCenteredString(0,"Error");
 					break;
 				}
-				break;//end of sensor case
-			case 2://battery percentage
-				writeDebugStreamLine("battery");
-				displayLCDString(0,0,"Battery Im: ");
-				displayNextLCDNumber(nImmediateBatteryLevel/1000., 3);
-				displayNextLCDChar('V');
-				displayLCDString(1,0,"Battery Av: ");
-				displayNextLCDNumber(nAvgBatteryLevel/1000., 3);
-				displayNextLCDChar('V');
-				break;//end of battery case
-			default:
-				displayLCDCenteredString(1,"ERROR FIX ME");
-				break;
-			}//end of sensor switch
-		}//end of while button != 2
-		screen = screen + 1;
-		if(screen>screenMAX){screen = 0;}//cycle through again
-		delay(50);
-	}//end of while(true)
-}//end of task
-
-void clearScreen()
-{
-	clearLCDLine(0);
-	clearLCDLine(1);
-}
-
-//byte buttonP()
-//{
-//	while(nLCDButtons != 0)
-//	{
-
-//	}//wait untill unpressed
-//	delay(10);
-//}
-
-int buttonP(bool *e)
-{
-	*e = false;//if not 5 then return 0 through pointer
-	int press = nLCDButtons;
-	if(press == 0)
-	{
-		return 0;
-	}
-	while(press != 0)//wait untill unpressed
-	{
-		press = nLCDButtons;
-	}
-	if(nLCDButtons == 5){*e = true;}//if 5 then return 1
-	return press;
-}
+				wait1Msec(100);//give the delay for the screen
+			}
+			else//not a BigState
+			{
+				if(BigState > 1)BigState = 0;
+				else if(BigState < 0)BigState = 1;
+			}
+			//check to see if buttons are pressed
+			if(nLCDButtons != 0)
+			{
+			//	while(nLCD != 0)//loop untill buttons unpressed
+			//	{
+					buttonState = nLCDButtons;
+			//	}
+			}
+			while(nLCDButtons != 0){wait1Msec(50);}//wait untill button unpressed
+		}//end while button != 1
+		BigState++;
+		buttonState = 0;
+		update = 1;
+	}//end while(true)
+}//end task
