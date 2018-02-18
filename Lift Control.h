@@ -31,8 +31,8 @@ void setLift(int target) {
 task liftControl(){
 	int liftState = 1;
 
-	const float Kp = 0.0;
-	const float Kd = 0.0;
+	const float Kp = 1.0;
+	const float Kd = 0.6;
 
 	int proportion;
 	int derivative;
