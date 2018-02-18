@@ -24,6 +24,7 @@ void auton1() {
 	mobileIn(120);
 	wait1Msec(1200);
 	mobileStop();
+	wait1Msec(200);
 
 	//drop preload
 	rollerOut(100);
@@ -40,7 +41,7 @@ void auton1() {
 	intakeDown(100);
 	wait1Msec(250);
 	setLift(0);
-	wait1Msec(600);
+	wait1Msec(750);
 
 	//adjust direction
 	direction = "right";
@@ -51,7 +52,7 @@ void auton1() {
 	intakeUp(100);
 	wait1Msec(750);
 	intakeStop();
-	wait1Msec(200);
+	wait1Msec(300);
 	rollerOut(100);
 	wait1Msec(500);
 
@@ -81,25 +82,26 @@ void auton1() {
 	setDrive("back", 1800);
 	wait1Msec(3000);
 	setDrive("left", 450);
-	wait1Msec(3000);
+	wait1Msec(1500);
 	setDrive("back", 650);
-	wait1Msec(3000);
+	wait1Msec(1500);
 	setDrive("left", 900);
-	wait1Msec(3000);
+	wait1Msec(1500);
 	setDrive("null", 0);
-	drive(120);
-	wait1Msec(800);
+	drive(100);
+	wait1Msec(1200);
 	drive(0);
 
 	//mobile goal intake out
 	mobileOut(120);
-	wait1Msec(1000);
+	wait1Msec(1300);
+	mobileStop();
 	drive(-50);
-	wait1Msec(500);
-	mobileIn(120);
-	wait1Msec(300);
-	drive(-120);
 	wait1Msec(1000);
+	mobileIn(120);
+	wait1Msec(700);
+	drive(-120);
+	wait1Msec(400);
 	drive(0);
 }
 
