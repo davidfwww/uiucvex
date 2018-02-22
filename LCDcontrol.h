@@ -1,17 +1,26 @@
+//Global Variable
+int auto = 0;
+
 void clearLCD()
 {
 	clearLCDLine(0);
 	clearLCDLine(1);
 }
 
+int getAuto()
+{
+	return auto;
+}
 
 task LCD()
 {
-	int buttonState = 2;
+	int buttonState = 0;
 	int BigState = 0;//only two options anyway, automous and sensors
-	int auto = 0, autoMax = 3;//change this as you increase your autonomous capacity
+	int autoMax = 2;//change this as you increase your autonomous capacity
 	int sense = 0, senseMax = 5;//change this as you increase your sensor capacity
 	int update = 1;
+
+	autoMax -= 1;//subtracts one because it uses 0 as a state
 
 	while(true)
 	{
@@ -35,8 +44,11 @@ task LCD()
 					update = 1;
 					buttonState = 0;
 				}
+
+				//upper and lower bounds of the autonomous mode
 				if(auto>autoMax)auto=0;//if auto is more than the maxium automous, loop back to 0
 				else if(auto<0)auto=autoMax;//if auto is less than 0, then loop back to autoMax
+
 				if(update == 1)
 				{
 					clearLCD();
