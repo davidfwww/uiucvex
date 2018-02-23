@@ -43,9 +43,13 @@ task liftControl(){
 	while(true) {
 		if (liftReset1 == 1 || liftReset2 == 1) liftPos = 0;
 
-		if (isAuton && liftTarget == -999) liftState = 1;
+		if (vexRT[Btn6U] == 1 || vexRT[Btn6D] == 1) liftState = 0;
+		else if (isAuton && liftTarget == -999) liftState = 1;
 		else if (isAuton) liftState = 2;
-		else liftState = 0;
+		else if (vexRT[Btn8D] == 1) {
+			liftState = 2;
+			setLift(150);
+		}
 
 		switch(liftState) {
 			//manual drive case
