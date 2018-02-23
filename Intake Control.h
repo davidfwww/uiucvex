@@ -45,10 +45,6 @@ void manualIntake() {
 	}
 }
 
-void setIntake(int target) {
-	intakeTarget = target;
-}
-
 task intakeControl(){
 	while(true) {
 		if (!isAuton) {

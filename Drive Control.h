@@ -34,16 +34,6 @@ void manualDrive() {
 	motor[leftDrive2] = leftDriveSpeed;
 }
 
-void setDrive(char* dir, int target)
-{
-	direction = dir;
-	driveTarget = target;
-	driveEncoder = 0;
-	gyroPos = 0;
-	newDriveTarget = true;
-	if (direction == "right" || direction == "back") driveTarget *= -1;
-}
-
 //positive is forward
 void drive(int speed) {
 	motor[rightDrive1] = speed;
@@ -62,6 +52,16 @@ void turn(int speed) {
 
 void driveStop() {
 	drive(0);
+}
+
+void setDrive(char* dir, int target)
+{
+	direction = dir;
+	driveTarget = target;
+	driveEncoder = 0;
+	gyroPos = 0;
+	newDriveTarget = true;
+	if (direction == "right" || direction == "back") driveTarget *= -1;
 }
 
 //drive control task
