@@ -50,6 +50,7 @@
 #include "LCDcontrol.h"
 
 void pre_auton() {
+	startTask(LCD);
 	initializeGyro();
 }
 
@@ -59,7 +60,7 @@ task autonomous() {
 	startTask(intakeControl);
 	startTask(driveControl);
 	startTask(LCD);
-	autonExecution();
+	autonExecution(getAuto());
 }
 
 task usercontrol() {
