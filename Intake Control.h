@@ -1,18 +1,13 @@
-int intakeTarget;
-
 void intakeUp(int speed) {
-	motor[coneRight] = speed;
-	motor[coneLeft] = speed;
+	motor[cone] = speed;
 }
 
 void intakeDown(int speed) {
-	motor[coneRight] = 0 - speed;
-	motor[coneLeft] = 0 - speed;
+	motor[cone] = 0 - speed;
 }
 
 void intakeStop() {
-	motor[coneRight] = 0;
-	motor[coneLeft] = 0;
+	motor[cone] = 0;
 }
 
 void rollerIn(int speed) {
@@ -39,9 +34,7 @@ void manualIntake() {
 	}
 
 	if (vexRT[Btn8R]) {
-		rollerOut(120);
-	} else {
-		rollerIn(30);
+		wait1Msec(250);
 	}
 }
 
@@ -50,6 +43,22 @@ task intakeControl(){
 		if (!isAuton) {
 			manualIntake();
 		}
+		wait1Msec(20);
+	}
+}//end task
+
+task rollerControl() {
+	int lastPos;
+	int difference;
+	while(true) {
+		difference = abs(lastPos - intakePos);
+		if (vexRT[Btn8R] && difference < 10) {
+			rollerOut(120);
+			wait1Msec(500);
+		} else {
+			rollerIn(30);
+		}
+		lastPos = intakePos;
 		wait1Msec(20);
 	}
 }//end task

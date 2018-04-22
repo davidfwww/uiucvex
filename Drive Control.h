@@ -5,7 +5,7 @@ bool newDriveTarget = true;
 
 //drive constants
 const int JOYSTICK_THRESHOLD = 15;
-const int MAX_ACCEL = 10;
+const int MAX_ACCEL = 127;
 
 //sets right joystick threshold
 int adjustJoy(int joy) {

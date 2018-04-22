@@ -4,7 +4,8 @@ int liftTarget;
 bool newLiftTarget = true;
 
 void liftUp(int speed) {
-	motor[lift] = speed;
+	motor[lift12] = speed;
+	motor[lift3] = speed;
 }
 
 void liftStop() {
@@ -48,7 +49,7 @@ task liftControl(){
 		else if (isAuton) liftState = 2;
 		else if (vexRT[Btn8D] == 1) {
 			liftState = 2;
-			setLift(150);
+			setLift(300);
 		}
 
 		switch(liftState) {

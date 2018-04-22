@@ -16,7 +16,7 @@ task LCD()
 {
 	int buttonState = 0;
 	int BigState = 0;//only two options anyway, automous and sensors
-	int autoMax = 2;//change this as you increase your autonomous capacity
+	int autoMax = 5;//change this as you increase your autonomous capacity
 	int sense = 0, senseMax = 5;//change this as you increase your sensor capacity
 	int update = 1;
 
@@ -52,7 +52,30 @@ task LCD()
 				if(update == 1)
 				{
 					clearLCD();
-					displayLCDString(0,0,"Auto: ");displayNextLCDNumber(auto);//display number
+					char* autonName = "";
+					switch(auto) {
+					case 0:
+						autonName = "Left";
+						break;
+					case 1:
+						autonName = "Right";
+						break;
+					case 2:
+						autonName = "Nada";
+						break;
+					case 3:
+						autonName = "Left extra";
+						break;
+					case 4:
+						autonName = "Right extra";
+						break;
+					default:
+						autonName = "Nada";
+						break;
+					}
+					if (auto == 0) autonName = "Left";
+
+					displayLCDString(0,0,"Auto: ");displayNextLCDString(autonName);//display number
 					update = 0;
 				}
 			}
@@ -60,7 +83,7 @@ task LCD()
 			{
 				if(buttonState == 2){sense++;buttonState = 0;}//if button 2 is pressed, increase sense selection
 				if(sense>senseMax)sense=0;//if greater than the max senosrs, loop back to 0
-				clearLCD();
+					clearLCD();
 				switch(sense)
 				{
 				case 0://wheel encoder
@@ -70,13 +93,13 @@ task LCD()
 					break;
 				case 1://body lift encoder
 					displayLCDString(0,0,"body lift: ");
-					displayLCDNumber(1,0,nMotorEncoder[lift]);
-					if(buttonState == 4){nMotorEncoder[lift] = 0;buttonState=0;}
+					displayLCDNumber(1,0,nMotorEncoder[lift12]);
+					if(buttonState == 4){nMotorEncoder[lift12] = 0;buttonState=0;}
 					break;
 				case 2://collector lift encoder
 					displayLCDString(0,0,"collector: ");
-					displayLCDNumber(1,0,nMotorEncoder[coneRight]);
-					if(buttonState == 4){nMotorEncoder[coneRight] = 0;buttonState=0;}
+					displayLCDNumber(1,0,nMotorEncoder[cone]);
+					if(buttonState == 4){nMotorEncoder[cone] = 0;buttonState=0;}
 					break;
 				case 3://gyroscope
 					if(buttonState == 4)//reset gyroscope
@@ -123,10 +146,10 @@ task LCD()
 			//check to see if buttons are pressed
 			if(nLCDButtons != 0)
 			{
-			//	while(nLCD != 0)//loop untill buttons unpressed
-			//	{
-					buttonState = nLCDButtons;
-			//	}
+				//	while(nLCD != 0)//loop untill buttons unpressed
+				//	{
+				buttonState = nLCDButtons;
+				//	}
 			}
 			while(nLCDButtons != 0){wait1Msec(50);}//wait untill button unpressed
 		}//end while button != 1

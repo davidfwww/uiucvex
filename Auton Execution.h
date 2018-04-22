@@ -1,5 +1,7 @@
 
 void autonExecution(int selection) {
+	liftPos = 0;
+	gyroPos = 0;
 	setDrive("null", 0);
 	driveStop();
 	setLift(-999);
@@ -14,12 +16,22 @@ void autonExecution(int selection) {
 	switch(selection)
 	{
 		case 0:
-			auton1();
+			leftAuton();
 			break;
 		case 1:
-			auton2();
+			rightAuton();
+			break;
+		case 2:
+			noAuton();
+			break;
+		case 3:
+			secretLeft();
+			break;
+		case 4:
+			secretRight();
 			break;
 		default: //do nothing
+			noAuton();
 			break;
 	}
 }
