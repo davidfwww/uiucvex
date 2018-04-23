@@ -40,7 +40,7 @@ void manualIntake() {
 
 task intakeControl(){
 	while(true) {
-		if (!isAuton) {
+		if (!isAuton && !autoStack) {
 			manualIntake();
 		}
 		wait1Msec(20);
@@ -51,6 +51,9 @@ task rollerControl() {
 	int lastPos;
 	int difference;
 	while(true) {
+		if (autoStack) {
+			continue;
+		}
 		difference = abs(lastPos - intakePos);
 		if (vexRT[Btn8R] && difference < 10) {
 			rollerOut(120);
