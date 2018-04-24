@@ -45,7 +45,7 @@ task liftControl(){
 		if (liftReset1 == 1 || liftReset2 == 1) liftPos = 0;
 
 		if (vexRT[Btn6U] == 1 || vexRT[Btn6D] == 1) liftState = 0;
-		else if (isAuton && liftTarget == -999) liftState = 1;
+		else if ((isAuton && liftTarget == -999) || autoStack) liftState = 1;
 		else if (isAuton) liftState = 2;
 		else if (vexRT[Btn8D] == 1) {
 			liftState = 2;

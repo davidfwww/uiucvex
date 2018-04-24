@@ -4,6 +4,7 @@
 #pragma config(Sensor, in1,    driveGyro,      sensorGyro)
 #pragma config(Sensor, dgtl1,  liftBump1,      sensorTouch)
 #pragma config(Sensor, dgtl2,  liftBump2,      sensorTouch)
+#pragma config(Sensor, dgtl3,  stackSonar,     sensorSONAR_raw)
 #pragma config(Sensor, I2C_1,  ,               sensorQuadEncoderOnI2CPort,    , AutoAssign )
 #pragma config(Sensor, I2C_2,  ,               sensorQuadEncoderOnI2CPort,    , AutoAssign )
 #pragma config(Sensor, I2C_3,  ,               sensorQuadEncoderOnI2CPort,    , AutoAssign )
@@ -35,9 +36,13 @@
 #define intakePos nMotorEncoder[cone]
 #define driveEncoder nMotorEncoder[rightDrive1]
 #define gyroPos SensorValue(driveGyro)
+#define stackDistance SensorValue[stackSonar]
 #define rightJoyRaw vexRT[Ch1]
 #define leftJoyRaw vexRT[Ch3]
 #define isAuton bIfiAutonomousMode
+#define btnPressed (vexRT[Btn6U] || vexRT[Btn6D] || vexRT[Btn5U] ||	vexRT[Btn5D] || vexRT[Btn8R] || vexRT[Btn7U] ||vexRT[Btn7D])
+
+bool autoStack = false;
 
 //Included files
 #include "Utility Functions.h"
@@ -48,6 +53,92 @@
 #include "Autons.h"
 #include "Auton Execution.h"
 #include "LCDcontrol.h"
+
+void stackCone() {
+	if (stackDistance == -1) {
+		return;
+	}
+
+	int originalHeight = liftPos + 200;
+	//lift to proper height
+	rollerIn(30);
+	/*int first = stackDistance;
+	int second = first;
+	int third = second;
+	int fourth = third;
+	while(stackDistance < 1300 || first < 1300 || second < 1300
+		|| third < 1300 || fourth < 1300) {
+		liftUp(100);
+		if (btnPressed || stackDistance == -1) {
+			return;
+		}
+		fourth = third;
+		third = second;
+		second = first;
+		first = stackDistance;
+		wait1Msec(5);
+	}*/
+	clearTimer(T1);
+	clearTimer(T2);
+	while(time1[T1] < 150) {
+		liftUp(100);
+		if (btnPressed || stackDistance == -1) {
+			return;
+		}
+		if (stackDistance < 1300) {
+			clearTimer(T1);
+		}
+		wait1Msec(3);
+		//if (time1[T2] < 2000 && time1[T1] > 750) {
+			//break;
+		//}
+	}
+
+	//bring intake arm back
+	liftUp(-10);
+	intakeUp(120);
+	clearTimer(T1);
+	waitUntil(time1(T1) > 500 || btnPressed);
+	liftStop();
+	intakeStop();
+	if (btnPressed || stackDistance == -1) {
+		return;
+	}
+
+	//wait for arm to settle
+	clearTimer(T1);
+	waitUntil(time1(T1) > 200 || btnPressed);
+	if (btnPressed) {
+		return;
+	}
+
+	//drop cone
+	rollerOut(120);
+	liftUp(20);
+	clearTimer(T1);
+	waitUntil(time1(T1) > 300 || btnPressed);
+	if (btnPressed) {
+		return;
+	}
+
+	//bring intake arm forward
+	intakeDown(120);
+	clearTimer(T1);
+	waitUntil(time1(T1) > 500 || btnPressed);
+	if (btnPressed) {
+		return;
+	}
+	intakeStop();
+
+	//bring lift down
+	liftUp(-100);
+	rollerIn(30);
+	waitUntil(liftPos < originalHeight || btnPressed);
+	if (btnPressed) {
+		return;
+	}
+	liftStop();
+}
 
 void pre_auton() {
 	startTask(LCD);
@@ -71,5 +162,12 @@ task usercontrol() {
 	startTask(LCD);
 	while(true) {
 		manualMobile();
+		if (vexRT[Btn8L]) {
+			autoStack = true;
+		}
+		if (autoStack) {
+			stackCone();
+			autoStack = false;
+		}
 	}
 }
