@@ -55,28 +55,66 @@ bool autoStack = false;
 #include "LCDcontrol.h"
 
 void stackCone() {
-	int originalHeight = liftPos + 100;
+	if (stackDistance == -1) {
+		return;
+	}
+
+	int originalHeight = liftPos + 200;
 	//lift to proper height
 	rollerIn(30);
-	while(stackDistance < 1000) {
+	/*int first = stackDistance;
+	int second = first;
+	int third = second;
+	int fourth = third;
+	while(stackDistance < 1300 || first < 1300 || second < 1300
+		|| third < 1300 || fourth < 1300) {
 		liftUp(100);
-		if (btnPressed) {
+		if (btnPressed || stackDistance == -1) {
 			return;
 		}
+		fourth = third;
+		third = second;
+		second = first;
+		first = stackDistance;
+		wait1Msec(5);
+	}*/
+	clearTimer(T1);
+	clearTimer(T2);
+	while(time1[T1] < 150) {
+		liftUp(100);
+		if (btnPressed || stackDistance == -1) {
+			return;
+		}
+		if (stackDistance < 1300) {
+			clearTimer(T1);
+		}
+		wait1Msec(3);
+		//if (time1[T2] < 2000 && time1[T1] > 750) {
+			//break;
+		//}
 	}
 
 	//bring intake arm back
-	liftUp(15);
+	liftUp(-10);
 	intakeUp(120);
 	clearTimer(T1);
 	waitUntil(time1(T1) > 500 || btnPressed);
+	liftStop();
+	intakeStop();
+	if (btnPressed || stackDistance == -1) {
+		return;
+	}
+
+	//wait for arm to settle
+	clearTimer(T1);
+	waitUntil(time1(T1) > 200 || btnPressed);
 	if (btnPressed) {
 		return;
 	}
-	intakeStop();
 
 	//drop cone
 	rollerOut(120);
+	liftUp(20);
 	clearTimer(T1);
 	waitUntil(time1(T1) > 300 || btnPressed);
 	if (btnPressed) {
