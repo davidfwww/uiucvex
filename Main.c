@@ -60,38 +60,22 @@ void stackCone() {
 	}
 
 	int originalHeight = liftPos + 200;
-	//lift to proper height
+
 	rollerIn(30);
-	/*int first = stackDistance;
-	int second = first;
-	int third = second;
-	int fourth = third;
-	while(stackDistance < 1300 || first < 1300 || second < 1300
-		|| third < 1300 || fourth < 1300) {
-		liftUp(100);
-		if (btnPressed || stackDistance == -1) {
-			return;
-		}
-		fourth = third;
-		third = second;
-		second = first;
-		first = stackDistance;
-		wait1Msec(5);
-	}*/
+
 	clearTimer(T1);
-	clearTimer(T2);
+	liftUp(100);
 	while(time1[T1] < 150) {
-		liftUp(100);
 		if (btnPressed || stackDistance == -1) {
+			liftStop();
 			return;
 		}
 		if (stackDistance < 1300) {
 			clearTimer(T1);
 		}
 		wait1Msec(3);
-		//if (time1[T2] < 2000 && time1[T1] > 750) {
-			//break;
-		//}
+		//second = first;
+		//first = stackDistance;
 	}
 
 	//bring intake arm back
@@ -142,7 +126,7 @@ void stackCone() {
 
 void pre_auton() {
 	startTask(LCD);
-	initializeGyro();
+	initializeSensors();
 }
 
 task autonomous() {

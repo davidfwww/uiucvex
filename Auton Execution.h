@@ -36,10 +36,12 @@ void autonExecution(int selection) {
 	}
 }
 
-void initializeGyro()
+void initializeSensors()
 {
 	SensorType[in1] = sensorNone; //clear previous sensor readings
+	SensorType[dgtl3] = sensorNone;
 	wait1Msec(300);
 	SensorType[in1] = sensorGyro; //reconfigure port as gyro
+	SensorType[dgtl3] = sensorSONAR_Ping_raw;
 	wait1Msec(1500);
 }
